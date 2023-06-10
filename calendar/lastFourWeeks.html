@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최근 4주</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
+    <style>
+        /* common class*/
+        .flex { display: flex; justify-content: center; align-items: center;}
+        .font-10 { font-size: 10px;}
+        .font-12 { font-size: 12px;}
+        .font-14 { font-size: 14px;}
+        .font-16 { font-size: 16px;}
+        .w-700 { font-weight: 700;}
+        .w-500 { font-weight: 500;}
+        .success { background-color: #EDF9F2; color: #6FC3A1; border-radius: 4px; line-height: 16px;}
+        .warning { background-color: #FFEBD3; color: #E48531; border-radius: 4px; line-height: 16px;}
+        .fail { background-color: #FDF1ED; color: #E9625D; border-radius: 4px; line-height: 16px;}
+
+        /* main Style */
+        .wrapper { width: 375px; margin: 0 auto;}
+        .contents { color: #141414; font-weight: 500;}
+        .main__contents { display: block; padding: 20px;}
+        .error__contents { display: none; position: relative; height: 100vh;}
+        .error__contents img { width: 100%;}
+        .error__contents img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);}
+        .header { height: 24px; justify-content: space-between;}
+        .header__weeklyInfo { text-align: center; font-weight: 500;}
+        .weeky__info { font-size: 12px; padding-top: 36px;}
+        .weekly__index { justify-content: space-between; height: 16px; line-height: 16px;}
+        .weekly__calendar { padding-top: 16px;}
+        .daily__status { display:flex; justify-content: space-between; height: 130px;}
+        .daily__status--bar { width: 39px;}
+        .daily__status--bar > div:first-child { padding-top: 8px; padding-bottom: 4px;}
+        .daily__status--bar .each__day { border-radius: 28px; border: 1px solid #ffffff;}
+        .daily__status--bar .active__day { border: 1px solid #141414; background-color: #F8FAFC;}
+        .daily__status--bar .active__plan { opacity: 1;}
+        .daily__planning--dot { content: ''; display: flex; justify-content: center; margin: 0 auto; width: 6px; height: 6px; background-color: #5C96E6; border-radius: 50%; opacity: 0;}
+        .daily__planning--dot + p:first-of-type { padding-top: 8px; padding-bottom: 4px;}
+        .learning__status { width: 39px; padding-top: 8px;}
+        .learning__status div { margin-top: 4px;}
+        .weekly__learning { height: 244px; padding-top: 18px;}
+        .weekly__learning > .learning__day::before { content: ''; display: block; width: 6px; height: 6px; background-color: #5C96E6; margin-right: 8px; border-radius: 50%;}
+        .weekly__learning > .learning__day { justify-content: normal; width: 55px; height: 16px; line-height: 16px; margin-bottom: 8px;}
+        .daily__section { padding-top: 12px;}
+        .weekly__contents { padding: 8px; border-radius: 8px; background-color: #F8FAFC;}
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="contents">
+            <div class="main__contents">
+                <div class="flex header">
+                    <div class="flex header__prevBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.338 19.0013C14.1886 19.0018 14.041 18.9688 13.906 18.9048C13.771 18.8407 13.6521 18.7473 13.558 18.6313L8.72798 12.6313C8.58089 12.4523 8.50049 12.2279 8.50049 11.9963C8.50049 11.7646 8.58089 11.5402 8.72798 11.3613L13.728 5.36125C13.8977 5.15704 14.1416 5.02861 14.4061 5.00423C14.6705 4.97985 14.9338 5.06151 15.138 5.23125C15.3422 5.40099 15.4706 5.6449 15.495 5.90933C15.5194 6.17375 15.4377 6.43704 15.268 6.64125L10.798 12.0013L15.118 17.3613C15.2403 17.508 15.3179 17.6868 15.3418 17.8763C15.3657 18.0659 15.3348 18.2583 15.2527 18.4308C15.1707 18.6034 15.0409 18.7488 14.8788 18.8499C14.7167 18.9509 14.529 19.0035 14.338 19.0013Z" fill="#5C96E6" />
+                            <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#5C96E6" />
+                        </svg>
+                    </div>
+                    <p class="font-16 header__weeklyInfo">주간 현황</p>
+                    <div class="flex header__nextBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.66178 4.99875C9.81117 4.99824 9.95878 5.03121 10.0938 5.09524C10.2287 5.15927 10.3477 5.25273 10.4418 5.36875L15.2718 11.3687C15.4189 11.5477 15.4993 11.7721 15.4993 12.0037C15.4993 12.2354 15.4189 12.4598 15.2718 12.6387L10.2718 18.6387C10.102 18.843 9.85813 18.9714 9.5937 18.9958C9.32928 19.0201 9.066 18.9385 8.86178 18.7687C8.65756 18.599 8.52914 18.3551 8.50476 18.0907C8.48038 17.8262 8.56204 17.563 8.73178 17.3587L13.2018 11.9987L8.88178 6.63875C8.7595 6.49196 8.68182 6.31322 8.65794 6.12367C8.63406 5.93412 8.66498 5.7417 8.74703 5.56917C8.82909 5.39665 8.95885 5.25123 9.12096 5.15014C9.28307 5.04905 9.47074 4.99652 9.66178 4.99875Z" fill="#C4C4C4" />
+                            <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#C4C4C4" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="weeky__info">
+                    <div class="flex weekly__index">
+                        <p class="flex">오늘</p>
+                    </div>
+                    <div class="weekly__calendar">
+                        <div class="daily__status">
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <p class="flex">월</p>
+                                    <p class="flex font-16 w-700">1</p>
+                                </div>
+                            </div>
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <p class="flex">화</p>
+                                    <p class="flex font-16 w-700">2</p>
+                                </div>
+                            </div>
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <p class="flex">수</p>
+                                    <p class="flex font-16 w-700">3</p>
+                                </div>
+                            </div>
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <p class="flex">목</p>
+                                    <p class="flex font-16 w-700">4</p>
+                                </div>
+                            </div>
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <p class="flex">금</p>
+                                    <p class="flex font-16 w-700">5</p>
+                                </div>
+                            </div>
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <div class="daily__planning--dot"></div>
+                                    <p class="flex">토</p>
+                                    <p class="flex font-16 w-700">6</p>
+                                </div>
+                            </div>
+                            <div class="daily__status--bar">
+                                <div class="each__day">
+                                    <div class="daily__planning--dot"></div>
+                                    <p class="flex">일</p>
+                                    <p class="flex font-16 w-700">7</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const renderCurrentDateIndicator = () => {
+        const koDtf = new Intl.DateTimeFormat("ko", { dateStyle: "long" }); // 한국시간 변환값
+        const date = koDtf.format(new Date());
+        const currentDateIndicator = document.querySelector('.weekly__index p')
+        currentDateIndicator.textContent = `오늘 : ${date}`;
+    }
+    const renderWeek = (currentPage = 3) => {
+        const getDate = new dayjs();
+        const status = document.querySelector('.daily__status');
+        const dayList = document.querySelectorAll('.each__day');
+        const sevenDays = {0 : '일', 1 : '월', 2 : '화', 3 : '수', 4 : '목', 5 : '금', 6 : '토'}
+        const currentDate = dayjs(new Date());
+        const previousMonthLastDate = currentDate.subtract(1, 'month').endOf('month').date(); //현재 날짜의 이전 달의 마지막 날짜 (30 or 31)
+        // console.log(previousMonthLastDate)
+        status.innerHTML = '';
+        dayList.forEach((el, idx) => {
+            const HTML = 
+                `<div class="daily__status--bar">
+                    <div class="each__day ${currentPage === 3 && idx === 6 ? "active__day" : ""}">
+                        <p class="flex">${sevenDays[(getDate.get("d") + idx - 6) < 0 ? getDate.get("d") + idx + 1 : (getDate.get("d") + idx - 6)]}</p>
+                        <p class="flex font-16 w-700">
+                            ${getDate.format("D") - 6 + idx - (7 * Math.abs(currentPage - 3)) === 0
+                            ? previousMonthLastDate
+                            : getDate.format("D") - 6 + idx - (7 * Math.abs(currentPage - 3)) > 0
+                            ? getDate.format("D") - 6 + idx - (7 * Math.abs(currentPage - 3))
+                            : previousMonthLastDate + Number(getDate.format("D")) - 6 + idx - 7 * (Math.abs(currentPage - 3))}
+                        </p>
+                    </div>
+                </div>`
+            status.insertAdjacentHTML('beforeend', HTML)
+
+            console.log(Number(getDate.format("D")) - 6 + idx - 7 * (Math.abs(currentPage - 3)))
+            console.log(previousMonthLastDate + Number(getDate.format("D")) - 6 + idx - 7 * (Math.abs(currentPage - 3)))   
+        })
+    }
+    const changeButtonColor = (target, color) => {
+        target.querySelector('path').style.fill = color
+        target.querySelector('rect').style.stroke = color
+    }
+    const initAddEventListener = () => {
+        let totalPage = 3; //최대 이동 주차는 3주로 고정
+        const preBtn = document.querySelector('.header__prevBtn');
+        const nextBtn = document.querySelector('.header__nextBtn');
+
+        preBtn.addEventListener('click', () => {
+            totalPage--;
+            changeButtonColor(nextBtn, '#5C96E6')
+            if (totalPage <= 0) {
+                changeButtonColor(preBtn, '#C4C4C4')
+                totalPage = 0;
+            }
+            renderWeek(totalPage)
+        })
+        nextBtn.addEventListener('click', () => {
+            totalPage++;
+            changeButtonColor(preBtn, '#5C96E6')
+            if (totalPage >= 3) {
+                changeButtonColor(nextBtn, '#C4C4C4')
+                totalPage = 3;
+            }
+            renderWeek(totalPage)
+        })
+    }
+    initAddEventListener();
+    renderCurrentDateIndicator();
+    renderWeek();
+</script>
+</html>
