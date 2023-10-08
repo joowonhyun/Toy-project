@@ -4,7 +4,7 @@
 최근 4주를 보여줄 수 있는 기능을 구현해야 하는 일이 생겼다. 라이브러리의 도움없이 구현할 수도 있겠지만, day.js 라이브러리가 가볍고 잘 나와있다는 얘기를 들어서 day.js 라이브러리를 활용해보았다.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.7/dayjs.min.js"></script>
 
-<h2>주요 기능<h2>
+<p>주요 기능<p>
 가장 끝에서 시작하며, 가장 우측이 현재 날짜다.
 현재 페이지를 포함하여 옆으로 이동할 때마다 1주전, 2주전, 3주전, 4주전 보여준다.
 오늘 날짜는 기준이 되는 값이므로 구분될 수 있도록 background 처리한다.
@@ -73,7 +73,8 @@ const renderCurrentDateIndicator = () => {
     renderCurrentDateIndicator();
     renderWeek();
 </script>
-<h2>코드설명<h2>
+
+<p>코드 설명<p>
 renderCurrentDateIndicator는 좌측에 있는 오늘 날짜 (형식: yyyy-mm-dd)를 나타낸다.
 getDate.get("d")는 요일을 나타내는 인덱스 값으로 0은 일요일, 1은 월요일, 2는 화요일, 3은 수요일, ⋯ ,6은 토요일이다. 이를 sevenDays 객체로 묶어서 if문 중첩을 최대한 피한다.
 매월 1일의 전날은 전 월의 30일 or 31일이 되므로 전월이 끝나는 날짜를 알 수 있어야 한다.
