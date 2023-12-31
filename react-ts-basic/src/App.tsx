@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
-import TodoInsert from './Components/TodoInsert';
-import TodoList from './Components/TodoList';
-import TodoTemplate from './Components/TodoTemplate';
+import TodoInsert from './components/TodoInsert';
+import TodoList from './components/TodoList';
+import TodoTemplate from './components/TodoTemplate';
 
 export interface Todos {
   id: number;
