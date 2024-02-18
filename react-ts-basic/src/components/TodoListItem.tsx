@@ -8,22 +8,22 @@ import cn from 'classnames';
 
 import './TodoListItem.scss';
 import { Todos } from '../App';
+import { onRemove, onToggle } from '../store/store';
+import { useDispatch } from 'react-redux';
 
 interface listProps {
   todo: Todos;
-  onRemove: (id: number) => void;
-  onToggle: (id: number) => void;
 }
 
-const TodoListItem = ({ todo, onRemove, onToggle }: listProps) => {
+const TodoListItem = ({ todo }: listProps) => {
   const { id, text, checked } = todo;
-
+  const dispatch = useDispatch();
   return (
     <div className="TodoListItem">
       <div
         className={cn('checkbox', { checked })}
         onClick={() => {
-          onToggle(id);
+          dispatch(onToggle(id));
         }}
       >
         {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
@@ -32,7 +32,7 @@ const TodoListItem = ({ todo, onRemove, onToggle }: listProps) => {
       <div
         className="remove"
         onClick={() => {
-          onRemove(id);
+          dispatch(onRemove(id));
         }}
       >
         <MdRemoveCircleOutline />

@@ -1,27 +1,22 @@
 import { MdAdd } from 'react-icons/md';
 import './TodoInsert.scss';
-import { SetStateAction, useCallback, useState } from 'react';
+import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { onAdd } from '../store/store';
 
-interface propInsertFunc {
-  onInsert: (e: string) => void;
-}
-
-const TodoInsert = ({ onInsert }: propInsertFunc) => {
+const TodoInsert = () => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState('');
-  const handleChange = useCallback(
-    (e: { target: { value: SetStateAction<string> } }) => {
-      setValue(e.target.value);
-    },
-    [],
-  );
-  const handleSubmit = useCallback(
-    (e: { preventDefault: () => void }) => {
-      onInsert(value);
-      setValue('');
-      e.preventDefault();
-    },
-    [onInsert, value],
-  );
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValue(e.target.value);
+  }
+  
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    dispatch(onAdd(value));
+    setValue('');
+  };
   return (
     <form className="TodoInsert" onSubmit={handleSubmit}>
       <input

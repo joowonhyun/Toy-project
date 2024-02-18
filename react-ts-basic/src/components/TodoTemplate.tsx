@@ -1,7 +1,5 @@
 import './TodoTemplate.scss';
 
-type propChild = {};
-
 const TodoTemplate = ({ children }: any) => {
   return (
     <div className="TodoTemplate">
